@@ -7,7 +7,10 @@ const commentRoute = require('./comment.route');
 const blogRoute = require('./blog.route');
 
 const router = express.Router();
-
+// 新增健康检查路由
+router.get('/health', (req, res) => {
+  res.send('ok');
+});
 const defaultRoutes = [
   {
     path: '/auth',

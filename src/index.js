@@ -10,7 +10,8 @@ const port = process.env.PORT || config.port;
 server = app.listen(port, () => {
   logger.info(`Listening to port ${port}`);
   // http启动后再连接数据库
-  mongoose.connect(config.mongoose.url, config.mongoose.options)
+  mongoose
+    .connect(config.mongoose.url, config.mongoose.options)
     .then(() => {
       logger.info('Connected to MongoDB');
     })
