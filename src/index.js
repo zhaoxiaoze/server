@@ -4,11 +4,19 @@ const config = require('./config/config');
 const logger = require('./config/logger');
 
 let server;
-mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
-  logger.info('Connected to MongoDB');
-  server = app.listen(config.port, () => {
-    logger.info(`Listening to port ${config.port}`);
-  });
+const port = process.env.PORT || config.port;
+
+// 先启动HTTP服务，保证云托管健康检查可以通
+server = app.listen(port, () => {
+  logger.info(`Listening to port ${port}`);
+  // http启动后再连接数据库
+  mongoose.connect(config.mongoose.url, config.mongoose.options)
+    .then(() => {
+      logger.info('Connected to MongoDB');
+    })
+    .catch((err) => {
+      logger.error('MongoDB connect failed', err);
+    });
 });
 
 const exitHandler = () => {
@@ -33,6 +41,11 @@ process.on('unhandledRejection', unexpectedErrorHandler);
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received');
   if (server) {
-    server.close();
+    server.close(() => {
+      logger.info('HTTP server closed on SIGTERM');
+      process.exit(0);
+    });
+  } else {
+    process.exit(0);
   }
 });
