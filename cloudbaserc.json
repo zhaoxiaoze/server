@@ -1,0 +1,17 @@
+{
+  "envId": "glamorous-flamingo-d3c41206c8e60",
+  "framework": {
+    "name": "blog-api",
+    "plugins": {
+      "node": {
+        "use": "@cloudbase/framework-plugin-node",
+        "inputs": {
+          "entry": "src/app.js",
+          "functionName": "blogApi",
+          "runtime": "Nodejs20",
+          "path": "/blogApi"
+        }
+      }
+    }
+  }
+}
