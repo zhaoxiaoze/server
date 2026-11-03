@@ -38,7 +38,12 @@ app.use(mongoSanitize());
 app.use(compression());
 
 // enable cors
-app.use(cors());
+app.use(
+  cors({
+    origin: config.env === 'production' ? process.env.FRONTEND_URL : true,
+    credentials: true,
+  })
+);
 app.options('*', cors());
 
 // jwt authentication
